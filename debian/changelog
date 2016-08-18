@@ -1,0 +1,19 @@
+wasta-tw5-setup (0.9.0) xenial; urgency=medium
+
+  * debian/control: added wine and winetricks as dependencies
+  * wasta-tw5-preinstall: removed checking for and installing wine, as
+    it is now a dependency.  Script now only runs at user level.
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Thu, 18 Aug 2016 16:16:50 +0300
+
+wasta-tw5-setup (0.1.1) precise; urgency=medium
+
+  * wasta-tw5-preinstall: dialog cleanup to reference wasta-tw5-postinstall
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Sun, 25 Jan 2015 11:56:44 +0300
+
+wasta-tw5-setup (0.1.0) precise; urgency=low
+
+  * initial release 
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Sun, 25 Jan 2015 10:39:22 +0300

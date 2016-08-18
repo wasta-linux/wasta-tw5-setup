@@ -1,0 +1,21 @@
+;; TW5 modification
+;; #This command will add the needed registry statements to the master list.   
+;; #EVERYONE running wine after this is saved will re-import wine.inf
+;; #   the next time wine runs.
+;; 
+;; # sed -i -e '/;; TW5 modification/,/;; END TW5 modification/d' \
+;; #        -e '/\[Classes\]/r tw5_template.inf' 
+;; #    /usr/share/wine/wine.inf
+;; #
+
+;; #
+;; # script someone wrote to import ALL handled linux apps into wine.  
+;; # https://github.com/MestreLion/wine-tools/blob/master/wine-import-extensions
+;; #
+
+
+;; TW5 modification
+HKCR,.pdf,,2,"PDFfile"
+HKCR,.pdf,,2,"Content Type","application/pdf"
+HKCR,PDFfile\Shell\Open\command,,2,"winebrowser ""%1"""
+;; END TW5 modification

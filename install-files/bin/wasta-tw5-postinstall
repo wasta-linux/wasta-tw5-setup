@@ -1,0 +1,159 @@
+#!/bin/bash
+
+# ==============================================================================
+# TW5 PostInstall (configures TW5)
+#
+#   2013-08-01 rik: initial script
+#   2013-08-02 jl:  fix registry patch, cleanup wine start menu entries
+#   2014-03-08 jl:  support TW 5.1
+#   2014-05-28 rik: fixing TW5 Icon for desktop launcher.  Not sure about TW 5.1
+#       paths so leaving unmodified for now.
+#   2014-06-17 rik: syntax cleanup on the icon sed
+#   2015-01-25 rik: requiring to NOT be run as root
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Initial prompt
+# ------------------------------------------------------------------------------
+echo
+echo "========================================================================="
+echo "=== TW5 PostInstall (configures TW5) ===================================="
+echo "========================================================================="
+echo
+echo "This file assumes that TW5 is already installed in WINE."
+echo
+echo "Close this window if you do not want to run this script."
+echo
+read -p "Press <Enter> to continue..."
+
+# ------------------------------------------------------------------------------
+# PostInstall Cleanup
+# ------------------------------------------------------------------------------
+
+echo
+echo "Cleaning up desktop links..."
+sleep 2s
+# afterward, cleanup links
+rm -f /home/$(logname)/Desktop/Translator\'s\ Workplace\ 5*
+rm -f /home/$(logname)/Desktop/BART\ 5.3*
+
+echo
+echo "Cleaning up startmenu items...  You will find TW5 under Wine..."
+sleep 2s
+# remove all SIL Font startmenu items (really clutter up menu)
+rm -rf /home/$(logname)/.local/share/applications/wine/Programs/SIL/
+
+# don't show all of the JUNK MENU entries that tag along with Bart and TW5 
+#   and categorize the useful apps as Wine applications.
+# 
+#    SED syntax:  append NoDisplay=true *FIRST* (before file length is truncated...), then delete any duplicates (allows script to be rerun - doesn't affect the line we just appended).
+
+# ------------------------------------------------------------------------------
+# TW 5.0 menu entries
+# ------------------------------------------------------------------------------
+if [ -e "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.0/Translator's Workplace 5.desktop" ]; then
+  echo & echo "  TW 5.0 install detected...."
+  # HIDE all TW5 entries
+  sed -i -e '$a NoDisplay=true' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.0/"*.desktop
+
+  #UNHIDE the main application - and add it to Wine. (also fix the ICON)
+  sed -i -e '$a Categories=Education;Wine;Other' \
+         -e '/Categories=.*/d' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.0/Translator's Workplace 5.desktop"
+  # seem to be only able to do one "$a" at a time?
+  sed -i -e '$a Icon='"/home/$(logname)/.wine/dosdevices/c:/Program Files (x86)/SIL/TW5/TW50icon.ico" \
+         -e '/Icon=/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.0/Translator's Workplace 5.desktop"
+
+  # HIDE all DVD entries
+  sed -i -e '$a NoDisplay=true' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/TW5 Programs DVD/"*.desktop
+fi
+
+if [ -e "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3/BART 5.3.desktop" ]; then
+  # HIDE all BART entries
+  sed -i -e '$a NoDisplay=true' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3/"*.desktop
+
+  #UNHIDE the main application - and add it to Wine.
+  sed -i -e '$a Categories=Wine;Other' \
+         -e '/Categories=.*/d' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3/BART 5.3.desktop"
+
+fi  
+# ------------------------------------------------------------------------------
+# TW 5.1 menu entries
+# ------------------------------------------------------------------------------
+if [ -e "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.1/Translator's Workplace 5.1.desktop" ]; then
+  echo & echo "  TW 5.1 install detected...."
+  # HIDE all TW5 entries
+  sed -i -e '$a NoDisplay=true' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.1/"*.desktop
+
+  #UNHIDE the main application - and add it to Wine.
+  sed -i -e '$a Categories=Education;Wine;Other' \
+         -e '/Categories=.*/d' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.1/Translator's Workplace 5.1.desktop"
+
+  # HIDE all DVD entries
+  sed -i -e '$a NoDisplay=true' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/TW51 Programs DVD/"*.desktop
+fi
+if [ -e "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3.1/BART 5.3.1.desktop" ]; then
+  # HIDE all BART entries
+  sed -i -e '$a NoDisplay=true' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3.1/"*.desktop
+
+  #UNHIDE the main application - and add it to Wine.
+  sed -i -e '$a Categories=Wine;Other' \
+         -e '/Categories=.*/d' \
+         -e '/NoDisplay=.*/d' \
+     "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3.1/BART 5.3.1.desktop"
+fi
+
+# ------------------------------------------------------------------------------
+# Enable native PDF viewer
+# ------------------------------------------------------------------------------
+echo
+echo "Adjust Wine registry to use native Linux application to open pdf files..."
+sleep 2s
+
+# associate pdfs with wine (so will open native linux pdf app to open the pdf)
+REGFILE=/home/$(logname)/.wine/tw5_useLinuxPDFReader.reg
+mkdir -p $(dirname ${REGFILE})    ## shouldn't be necessary, but is safe.
+
+cat << EOF > ${REGFILE}
+[HKEY_CLASSES_ROOT\.pdf]
+@="PDFfile"
+"Content Type"="application/pdf"
+
+[HKEY_CLASSES_ROOT\PDFfile\Shell\Open\command]
+@="winebrowser \"%1\""
+EOF
+
+regedit $REGFILE
+
+# ------------------------------------------------------------------------------
+# Finished
+# ------------------------------------------------------------------------------
+printf "\n\n\n\n\n\n"
+echo "========================================================================="
+echo "=== Script Finished ====================================================="
+echo "========================================================================="
+echo
+echo "TW5 configuration complete.  You will find TW5 and BART under the Wine"
+echo "  category in the Start Menu."
+echo
+read -p "FINISHED:  Press <ENTER> to exit..."
+exit 0

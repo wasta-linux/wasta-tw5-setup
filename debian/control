@@ -1,0 +1,16 @@
+Source: wasta-tw5-setup
+Section: utils
+Priority: extra
+Maintainer: Rik Shaw <rikshaw76@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.5
+Homepage: https://sites.google.com/site/wastalinux/
+
+Package: wasta-tw5-setup
+Architecture: all
+Depends: wine, winetricks, ${shlibs:Depends}, ${misc:Depends}
+Description: Setup machine for TW5 installation via wine
+ Instructions (needed for each user wanting TW5):
+ 1. Run 'wasta-tw5-preinstall', to install vcrun6
+ 2. Install TW5 with 'wine /path/to/tw5-install-files/setup.exe'
+ 3. Run 'wasta-tw5-postinstall', which will make necessary adjustments

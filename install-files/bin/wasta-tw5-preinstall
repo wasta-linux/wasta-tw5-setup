@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# ==============================================================================
+# TW5 PreInstall (Installs Wine)
+#
+#   2013-08-01 rik: initial script
+#   2013-08-07 rik: re-worked to allow limited user to run.  Removed wine ppa.
+#   2015-01-25 rik: re-adjusted to reference wasta-tw5-setup folder rather than
+#       directory of exectuting script.
+#
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Ensure script running as regular user
+# ------------------------------------------------------------------------------
+if [ $(id -u) -eq 0 ]
+then
+    echo "Wasta-Reset started as root user."
+    echo "No processing done.  Exiting...."
+    exit 0
+fi
+
+# wasta-tw5-setup directory (for resources)
+DIR=/usr/share/wasta-tw5-setup
+
+clear
+echo "========================================================================="
+echo "=== TW5 Pre-Install ====================================================="
+echo "========================================================================="
+echo
+echo "$(wine --version) is installed, ready to proceed."
+echo
+echo "This script should be run by every user needing to use TW5."
+echo
+read -p "Press <Enter> to continue..."
+
+echo
+echo "Installing 'vcrun6' dll that is needed by TW5."
+echo "Don't be concerned with any 'p11-kit' message displayed...."
+sleep 3s
+
+mkdir -p /home/$USER/.cache/winetricks/vcrun6
+cp $DIR/resources/vcredist.exe /home/$USER/.cache/winetricks/vcrun6/
+
+winetricks -q vcrun6
+
+printf "\n\n\n\n\n\n"
+echo "========================================================================="
+echo "=== Script Finished ====================================================="
+echo "========================================================================="
+echo
+echo "TW5 Pre-Install complete."
+echo
+echo "Now install TW5 by browsing to your TW5 installation files and"
+echo "  right-clicking on the 'setup.exe' file, and choosing:"
+echo
+echo "  'Open With Wine Windows Program Loader'"
+echo
+echo "Alternatively, you can install TW5 from a terminal with this command:"
+echo
+echo "  'wine /path/to/tw5-install-files/setup.exe'"
+echo
+echo "Then following the normal prompts for installing TW5 and BART."
+echo
+echo "After TW5 is installed, then run the 'wasta-tw5-postinstall' command"
+echo "  for needed adjustments to complete the process."
+echo
+read -p "FINISHED:  Press <ENTER> to exit..."
+
+exit 0

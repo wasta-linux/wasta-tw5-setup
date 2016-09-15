@@ -1,3 +1,10 @@
+wasta-tw5-setup (0.9.1) xenial; urgency=medium
+
+  * wasta-tw5-postinstall: replacing $(logname) with $USER.  16.04
+    gnome-terminal doesn't support logname command.
+
+ -- Rik Shaw <rikshaw76@gmail.com>  Thu, 15 Sep 2016 19:29:06 +0300
+
 wasta-tw5-setup (0.9.0) xenial; urgency=medium
 
   * debian/control: added wine and winetricks as dependencies

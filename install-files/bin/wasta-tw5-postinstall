@@ -10,6 +10,8 @@
 #       paths so leaving unmodified for now.
 #   2014-06-17 rik: syntax cleanup on the icon sed
 #   2015-01-25 rik: requiring to NOT be run as root
+#   2016-09-15 rik: replacing $(logname) with $USER (16.04 gnome-terminal
+#       doesn't support logname command.
 #
 # ==============================================================================
 
@@ -35,14 +37,14 @@ echo
 echo "Cleaning up desktop links..."
 sleep 2s
 # afterward, cleanup links
-rm -f /home/$(logname)/Desktop/Translator\'s\ Workplace\ 5*
-rm -f /home/$(logname)/Desktop/BART\ 5.3*
+rm -f /home/$USER/Desktop/Translator\'s\ Workplace\ 5*
+rm -f /home/$USER/Desktop/BART\ 5.3*
 
 echo
 echo "Cleaning up startmenu items...  You will find TW5 under Wine..."
 sleep 2s
 # remove all SIL Font startmenu items (really clutter up menu)
-rm -rf /home/$(logname)/.local/share/applications/wine/Programs/SIL/
+rm -rf /home/$USER/.local/share/applications/wine/Programs/SIL/
 
 # don't show all of the JUNK MENU entries that tag along with Bart and TW5 
 #   and categorize the useful apps as Wine applications.
@@ -52,74 +54,74 @@ rm -rf /home/$(logname)/.local/share/applications/wine/Programs/SIL/
 # ------------------------------------------------------------------------------
 # TW 5.0 menu entries
 # ------------------------------------------------------------------------------
-if [ -e "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.0/Translator's Workplace 5.desktop" ]; then
+if [ -e "/home/$USER/.local/share/applications/wine/Programs/Translator's Workplace 5.0/Translator's Workplace 5.desktop" ]; then
   echo & echo "  TW 5.0 install detected...."
   # HIDE all TW5 entries
   sed -i -e '$a NoDisplay=true' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.0/"*.desktop
+     "/home/$USER/.local/share/applications/wine/Programs/Translator's Workplace 5.0/"*.desktop
 
   #UNHIDE the main application - and add it to Wine. (also fix the ICON)
   sed -i -e '$a Categories=Education;Wine;Other' \
          -e '/Categories=.*/d' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.0/Translator's Workplace 5.desktop"
+     "/home/$USER/.local/share/applications/wine/Programs/Translator's Workplace 5.0/Translator's Workplace 5.desktop"
   # seem to be only able to do one "$a" at a time?
-  sed -i -e '$a Icon='"/home/$(logname)/.wine/dosdevices/c:/Program Files (x86)/SIL/TW5/TW50icon.ico" \
+  sed -i -e '$a Icon='"/home/$USER/.wine/dosdevices/c:/Program Files (x86)/SIL/TW5/TW50icon.ico" \
          -e '/Icon=/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.0/Translator's Workplace 5.desktop"
+     "/home/$USER/.local/share/applications/wine/Programs/Translator's Workplace 5.0/Translator's Workplace 5.desktop"
 
   # HIDE all DVD entries
   sed -i -e '$a NoDisplay=true' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/TW5 Programs DVD/"*.desktop
+     "/home/$USER/.local/share/applications/wine/Programs/TW5 Programs DVD/"*.desktop
 fi
 
-if [ -e "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3/BART 5.3.desktop" ]; then
+if [ -e "/home/$USER/.local/share/applications/wine/Programs/BART 5.3/BART 5.3.desktop" ]; then
   # HIDE all BART entries
   sed -i -e '$a NoDisplay=true' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3/"*.desktop
+     "/home/$USER/.local/share/applications/wine/Programs/BART 5.3/"*.desktop
 
   #UNHIDE the main application - and add it to Wine.
   sed -i -e '$a Categories=Wine;Other' \
          -e '/Categories=.*/d' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3/BART 5.3.desktop"
+     "/home/$USER/.local/share/applications/wine/Programs/BART 5.3/BART 5.3.desktop"
 
 fi  
 # ------------------------------------------------------------------------------
 # TW 5.1 menu entries
 # ------------------------------------------------------------------------------
-if [ -e "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.1/Translator's Workplace 5.1.desktop" ]; then
+if [ -e "/home/$USER/.local/share/applications/wine/Programs/Translator's Workplace 5.1/Translator's Workplace 5.1.desktop" ]; then
   echo & echo "  TW 5.1 install detected...."
   # HIDE all TW5 entries
   sed -i -e '$a NoDisplay=true' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.1/"*.desktop
+     "/home/$USER/.local/share/applications/wine/Programs/Translator's Workplace 5.1/"*.desktop
 
   #UNHIDE the main application - and add it to Wine.
   sed -i -e '$a Categories=Education;Wine;Other' \
          -e '/Categories=.*/d' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/Translator's Workplace 5.1/Translator's Workplace 5.1.desktop"
+     "/home/$USER/.local/share/applications/wine/Programs/Translator's Workplace 5.1/Translator's Workplace 5.1.desktop"
 
   # HIDE all DVD entries
   sed -i -e '$a NoDisplay=true' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/TW51 Programs DVD/"*.desktop
+     "/home/$USER/.local/share/applications/wine/Programs/TW51 Programs DVD/"*.desktop
 fi
-if [ -e "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3.1/BART 5.3.1.desktop" ]; then
+if [ -e "/home/$USER/.local/share/applications/wine/Programs/BART 5.3.1/BART 5.3.1.desktop" ]; then
   # HIDE all BART entries
   sed -i -e '$a NoDisplay=true' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3.1/"*.desktop
+     "/home/$USER/.local/share/applications/wine/Programs/BART 5.3.1/"*.desktop
 
   #UNHIDE the main application - and add it to Wine.
   sed -i -e '$a Categories=Wine;Other' \
          -e '/Categories=.*/d' \
          -e '/NoDisplay=.*/d' \
-     "/home/$(logname)/.local/share/applications/wine/Programs/BART 5.3.1/BART 5.3.1.desktop"
+     "/home/$USER/.local/share/applications/wine/Programs/BART 5.3.1/BART 5.3.1.desktop"
 fi
 
 # ------------------------------------------------------------------------------
@@ -130,7 +132,7 @@ echo "Adjust Wine registry to use native Linux application to open pdf files..."
 sleep 2s
 
 # associate pdfs with wine (so will open native linux pdf app to open the pdf)
-REGFILE=/home/$(logname)/.wine/tw5_useLinuxPDFReader.reg
+REGFILE=/home/$USER/.wine/tw5_useLinuxPDFReader.reg
 mkdir -p $(dirname ${REGFILE})    ## shouldn't be necessary, but is safe.
 
 cat << EOF > ${REGFILE}
